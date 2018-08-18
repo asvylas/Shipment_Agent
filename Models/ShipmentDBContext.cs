@@ -6,11 +6,12 @@ namespace Shipment_Agent.Models
 {
   public class ShipmentDBContext : DbContext
   {
-    public ShipmentDBContext(DbContextOptions<ShipmentDBContext> options) : base(options) 
+    public ShipmentDBContext(DbContextOptions<ShipmentDBContext> options) : base(options)
     {
 
     }
 
     public DbSet<Shipment> Shipments { get; set; }
+    public DbSet<ClientAuth> ClientAuths { get; set; }
   }
 }

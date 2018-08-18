@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shipment_Agent.Models
 {
   public class Shipment
   {
-    public int ShipmentID { get; set; }
+    public string ShipmentID { get; set; }
     public int ClientID { get; set; }
     public int ClientReference1 { get; set; }
     public int ClientReference2 { get; set; }
@@ -31,5 +33,28 @@ namespace Shipment_Agent.Models
     public string DestinationReference { get; set; }
     public string DestinationInstructions { get; set; }
 
+    private static ShipmentDBContext _shipmentDBContext;
+    public Shipment(ShipmentDBContext shipmentDBContext)
+    {
+      _shipmentDBContext = shipmentDBContext;
+    }
+
+    public static string GenerateID(int ClientID)
+    {
+      try
+      {
+        var Client = _shipmentDBContext.ClientAuths
+          .Where(a => a.ID == ClientID).Single();
+        var CurrentShipmentID = _shipmentDBContext.Shipments
+          .Where(a => a.ClientID == ClientID)
+          .Max(a => a.ShipmentID) + 1;
+        string ShipmentID = "1010001" + Client.ID + CurrentShipmentID;
+        return ShipmentID;
+      }
+      catch (System.Exception ex)
+      {
+        throw ex;
+      }
+    }
   }
 }

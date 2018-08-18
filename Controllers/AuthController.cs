@@ -1,18 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Shipment_Agent.Models;
+using Shipment_Agent.Utils;
 
 namespace Shipment_Agent.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class ShipmentController : Controller
+  public class AuthController : Controller
   {
     private ShipmentDBContext _shipmentDBContext;
-    public ShipmentController(ShipmentDBContext shipmentDBContext)
+    public AuthController(ShipmentDBContext shipmentDBContext)
     {
       _shipmentDBContext = shipmentDBContext;
     }
@@ -30,26 +31,24 @@ namespace Shipment_Agent.Controllers
       return "value";
     }
 
-    // POST api/values
+    //POST api/values
     [HttpPost]
-    public async Task<JsonResult> PostAsync([FromBody] Shipment data)
+    public JsonResult Post([FromBody] ClientReg data)
     {
       try
       {
-        data.ShipmentID = Shipment.GenerateID(data.ClientID);
-        List<Shipment> list = new List<Shipment>();
-        await _shipmentDBContext.Shipments.AddAsync(data);
-        await _shipmentDBContext.SaveChangesAsync();
-
-        foreach (var item in _shipmentDBContext.Shipments)
+        (string hash, string salt) = data.RegisterClient(data.NAME, data.PASSWORD);
+        var Client = new Models.ClientAuth()
         {
-          list.Add(item);
-        }
-        return Json(list);
+          SALT = salt,
+          HASH = hash,
+          NAME = data.NAME
+        };
+        return Json(Client);
       }
-      catch (System.Exception ex)
+      catch (System.Exception)
       {
-        throw ex;
+        throw;
       }
 
     }
