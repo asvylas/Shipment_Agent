@@ -9,8 +9,8 @@ using Shipment_Agent.Models;
 namespace Shipment_Agent.Migrations
 {
     [DbContext(typeof(ShipmentDBContext))]
-    [Migration("20180814161610_ClientAuth")]
-    partial class ClientAuth
+    [Migration("20180819173006_uniquenameclientauth")]
+    partial class uniquenameclientauth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,16 +27,21 @@ namespace Shipment_Agent.Migrations
 
                     b.Property<string>("HASH");
 
-                    b.Property<long>("SALT");
+                    b.Property<string>("NAME");
+
+                    b.Property<string>("SALT");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("NAME")
+                        .IsUnique();
 
                     b.ToTable("ClientAuths");
                 });
 
             modelBuilder.Entity("Shipment_Agent.Models.Shipment", b =>
                 {
-                    b.Property<int>("ShipmentID")
+                    b.Property<string>("ShipmentID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientID");

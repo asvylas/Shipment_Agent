@@ -40,16 +40,17 @@ namespace Shipment_Agent.Controllers
         List<Shipment> list = new List<Shipment>();
         await _shipmentDBContext.Shipments.AddAsync(data);
         await _shipmentDBContext.SaveChangesAsync();
-
-        foreach (var item in _shipmentDBContext.Shipments)
-        {
-          list.Add(item);
-        }
-        return Json(list);
+        var shipment =  _shipmentDBContext.Shipments
+          .Where(a=> a.ShipmentID == data.ShipmentID).First();
+        // foreach (var item in _shipmentDBContext.Shipments)
+        // {
+        //   list.Add(item);
+        // }
+        return Json(shipment);
       }
       catch (System.Exception ex)
       {
-        throw ex;
+        return Json(ex);
       }
 
     }

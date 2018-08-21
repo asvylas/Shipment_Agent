@@ -10,8 +10,14 @@ namespace Shipment_Agent.Models
     {
 
     }
-
     public DbSet<Shipment> Shipments { get; set; }
     public DbSet<ClientAuth> ClientAuths { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<ClientAuth>()
+          .HasIndex(b => b.NAME)
+          .IsUnique();
+    }
   }
 }

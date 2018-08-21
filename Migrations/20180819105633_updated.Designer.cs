@@ -9,8 +9,8 @@ using Shipment_Agent.Models;
 namespace Shipment_Agent.Migrations
 {
     [DbContext(typeof(ShipmentDBContext))]
-    [Migration("20180814161424_new")]
-    partial class @new
+    [Migration("20180819105633_updated")]
+    partial class updated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,9 +20,25 @@ namespace Shipment_Agent.Migrations
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("Shipment_Agent.Models.ClientAuth", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("HASH");
+
+                    b.Property<string>("NAME");
+
+                    b.Property<string>("SALT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ClientAuths");
+                });
+
             modelBuilder.Entity("Shipment_Agent.Models.Shipment", b =>
                 {
-                    b.Property<int>("ShipmentID")
+                    b.Property<string>("ShipmentID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientID");

@@ -3,16 +3,30 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Shipment_Agent.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class updated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ClientAuths",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    NAME = table.Column<string>(nullable: true),
+                    HASH = table.Column<string>(nullable: true),
+                    SALT = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientAuths", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Shipments",
                 columns: table => new
                 {
-                    ShipmentID = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    ShipmentID = table.Column<string>(nullable: false),
                     ClientID = table.Column<int>(nullable: false),
                     ClientReference1 = table.Column<int>(nullable: false),
                     ClientReference2 = table.Column<int>(nullable: false),
@@ -44,6 +58,9 @@ namespace Shipment_Agent.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ClientAuths");
+
             migrationBuilder.DropTable(
                 name: "Shipments");
         }

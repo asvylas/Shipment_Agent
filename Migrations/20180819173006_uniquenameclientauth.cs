@@ -2,20 +2,21 @@
 
 namespace Shipment_Agent.Migrations
 {
-    public partial class ClientandShipmentChanges : Migration
+    public partial class uniquenameclientauth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientAuths_NAME",
                 table: "ClientAuths",
-                nullable: true);
+                column: "NAME",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Name",
+            migrationBuilder.DropIndex(
+                name: "IX_ClientAuths_NAME",
                 table: "ClientAuths");
         }
     }
