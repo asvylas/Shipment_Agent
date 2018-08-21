@@ -21,27 +21,13 @@ namespace Shipment_Agent.Controllers
     {
       _shipmentDBContext = shipmentDBContext;
     }
-    // GET api/values
-    [HttpGet]
-    public ActionResult<IEnumerable<string>> Get()
-    {
-      return new string[] { "value1", "value2" };
-    }
-
-    // GET api/values/5
-    [HttpGet("{id}")]
-    public ActionResult<string> Get(int id)
-    {
-      return "value";
-    }
-
-    //POST api/values
+    // Register a new user
     [HttpPost]
-    public async Task<JsonResult> Post([FromBody] Utils.Auth data)
+    public async Task<JsonResult> Post([FromBody] Utils.AuthIncData data)
     {
       try
       {
-        var Client = await Reg.RegisterClient(data, _shipmentDBContext);
+        var Client = await AuthAndReg.RegisterClient(data, _shipmentDBContext);
         return Json(Client);
       }
       catch (System.Exception ex)
@@ -50,26 +36,26 @@ namespace Shipment_Agent.Controllers
       }
 
     }
-
-    // PUT api/values/5
-    [HttpPut]
-    public async Task<JsonResult> Put([FromBody] Utils.Auth data )
+    //
+    [HttpDelete]
+    public async Task<JsonResult> Delete(Utils.AuthIncData data, ShipmentDBContext _shipmentDBContext)
     {
       try
       {
-        var Client = await Reg.AuthenticateClient(data, _shipmentDBContext);
-        return Json(Client);
+        bool ClientDeleted = await AuthAndReg.DeleteUser(data, _shipmentDBContext);
+        if (ClientDeleted)
+        {
+          return Json(String.Format("Client {0} deleted.", data.Name));
+        }
+        else
+        {
+          return Json(String.Format("No client by the name of {0} found.", data.Name));
+        }
       }
-      catch (System.Exception ex)
+      catch (System.Exception)
       {
-        return Json(ex);
+        throw;
       }
-    }
-
-    // DELETE api/values/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
     }
   }
 }

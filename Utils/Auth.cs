@@ -10,36 +10,61 @@ using System.Threading.Tasks;
 
 namespace Shipment_Agent.Utils
 {
-  public class Auth
+  public class AuthIncData
   {
     public string Name { get; set; }
     public string Password { get; set; }
-
-    
   }
 
-  public class Reg
+  public class AuthAndReg
   {
-    public static async Task<ClientAuth> AuthenticateClient(Auth data, ShipmentDBContext _context)
+    public static async Task<bool> AuthenticateClient(AuthIncData data, ShipmentDBContext _context)
     {
-      
-      var DBHash = await _context.ClientAuths.Where(a => a.NAME == data.Name).FirstAsync();
-      var AuthHash = Reg.CompareHash(data.Password, DBHash.SALT);
-      ClientAuth Client = new ClientAuth()
+      try
       {
-        HASH = AuthHash,
-        SALT = DBHash.HASH
-      };
-      return Client;
+        var Client = await _context.ClientAuths.Where(a => a.NAME == data.Name).FirstAsync();
+        var HashValidity = AuthAndReg.CompareHash(data.Password, Client);
+        if (!HashValidity)
+        {
+          throw new Exception("Invalid password.");
+        }
+        else
+        {
+          return HashValidity;
+        }
+
+      }
+      catch (System.Exception)
+      {
+        throw;
+      }
     }
 
-    public static async Task<ClientAuth> RegisterClient(Auth data, ShipmentDBContext _context)
+    public static async Task<bool> DeleteUser(AuthIncData data, ShipmentDBContext _context)
     {
+      try
+      {
+        bool HashValidity = await AuthenticateClient(data, _context);
+        if (HashValidity)
+        {
+          var Client = await _context.ClientAuths.Where(a => a.NAME == data.Name).FirstAsync();
+          _context.Remove(Client);
+          await _context.SaveChangesAsync();
+        }
+        return HashValidity;
+      }
+      catch (System.Exception)
+      {
+        throw;
+      }
+    }
 
+    public static async Task<ClientAuth> RegisterClient(AuthIncData data, ShipmentDBContext _context)
+    {
       bool CheckUnique = _context.ClientAuths.Where(a => a.NAME == data.Name).Count() > 0;
       if (CheckUnique)
       {
-        throw new Exception("Client name must be unique");
+        throw new Exception("Client name must be unique.");
       }
       else
       {
@@ -81,21 +106,24 @@ namespace Shipment_Agent.Utils
         numBytesRequested: 256 / 8));
       return (hash, Convert.ToBase64String(salt));
     }
+
     static int GenerateRN()
     {
+      /* TODO -> Generate specific client IDs.?? */
       Random rnd = new Random();
       int ClientID = rnd.Next(100000, 999999);
       return ClientID;
     }
-    public static string CompareHash(string Password, string Salt)
+
+    public static bool CompareHash(string Password, ClientAuth Client)
     {
       string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-        password:Password,
-        salt:Convert.FromBase64String(Salt),
-        prf:KeyDerivationPrf.HMACSHA1,
-        iterationCount:10000,
-        numBytesRequested:256 / 8));
-      return hash;
+        password: Password,
+        salt: Convert.FromBase64String(Client.SALT),
+        prf: KeyDerivationPrf.HMACSHA1,
+        iterationCount: 10000,
+        numBytesRequested: 256 / 8));
+      return hash == Client.HASH;
     }
   }
 }

@@ -42,10 +42,6 @@ namespace Shipment_Agent.Controllers
         await _shipmentDBContext.SaveChangesAsync();
         var shipment =  _shipmentDBContext.Shipments
           .Where(a=> a.ShipmentID == data.ShipmentID).First();
-        // foreach (var item in _shipmentDBContext.Shipments)
-        // {
-        //   list.Add(item);
-        // }
         return Json(shipment);
       }
       catch (System.Exception ex)
