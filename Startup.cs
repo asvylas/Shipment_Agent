@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Shipment_Agent.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Shipment_Agent.Utils;
+using Shipment_Agent.Services.Auth;
 
 namespace Shipment_Agent
 {
@@ -33,7 +33,7 @@ namespace Shipment_Agent
 
       /* Gain access to JWT secret and set token master's secret, if custom secret is not set in the configurations uses default secret */
       var secretString = Configuration.GetValue("Secret", "8gcK2WJBNFaH8deTWmRadZLvE67L8c29NfsdCAA8waHdX3kbYWJywU92bNVpZtJjmLAQhX");
-      Utils.TokenMaster.SetSecret(secretString);
+      TokenMaster.SetSecret(secretString);
       /* DB configuration */
       var connectionString = Configuration.GetConnectionString("ShipmentDBContext");
       services.AddEntityFrameworkNpgsql()

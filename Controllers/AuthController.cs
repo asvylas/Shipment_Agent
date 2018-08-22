@@ -8,7 +8,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Shipment_Agent.Models;
-using Shipment_Agent.Utils;
+using Shipment_Agent.Services;
+using Shipment_Agent.Services.Auth;
 
 namespace Shipment_Agent.Controllers
 {
@@ -23,7 +24,7 @@ namespace Shipment_Agent.Controllers
     }
     // Register a new user
     [HttpPost]
-    public async Task<JsonResult> Post([FromBody] Utils.AuthIncData data)
+    public async Task<JsonResult> Post([FromBody] AuthIncData data)
     {
       try
       {
@@ -38,7 +39,7 @@ namespace Shipment_Agent.Controllers
     }
     //
     [HttpDelete]
-    public async Task<JsonResult> Delete(Utils.AuthIncData data, ShipmentDBContext _shipmentDBContext)
+    public async Task<JsonResult> Delete(AuthIncData data, ShipmentDBContext _shipmentDBContext)
     {
       try
       {

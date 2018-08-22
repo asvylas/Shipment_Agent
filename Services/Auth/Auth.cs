@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace Shipment_Agent.Utils
+namespace Shipment_Agent.Services.Auth
 {
   public class AuthIncData
   {
