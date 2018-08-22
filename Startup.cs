@@ -25,23 +25,21 @@ namespace Shipment_Agent
       Configuration = configuration;
 
     }
-
     public IConfiguration Configuration { get; }
-
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddMvc()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+      /* Gain access to JWT secret and set token master's secret, if custom secret is not set in the configurations uses default secret */
+      var secretString = Configuration.GetValue("Secret", "8gcK2WJBNFaH8deTWmRadZLvE67L8c29NfsdCAA8waHdX3kbYWJywU92bNVpZtJjmLAQhX");
+      Utils.TokenMaster.SetSecret(secretString);
+      /* DB configuration */
       var connectionString = Configuration.GetConnectionString("ShipmentDBContext");
-
       services.AddEntityFrameworkNpgsql()
         .AddDbContext<ShipmentDBContext>(options => 
           options.UseNpgsql(connectionString, b => b.MigrationsAssembly("Shipment_Agent")));
     }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       if (env.IsDevelopment())
