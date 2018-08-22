@@ -3,22 +3,15 @@ using System.Linq;
 using System.Security.Cryptography;
 using Shipment_Agent.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Shipment_Agent.Classes;
 
 namespace Shipment_Agent.Services.Auth
 {
-  public class AuthIncData
-  {
-    public string Name { get; set; }
-    public string Password { get; set; }
-  }
-
   public class AuthAndReg
   {
-    public static async Task<bool> AuthenticateClient(AuthIncData data, ShipmentDBContext _context)
+    public static async Task<bool> AuthenticateClient(UserLogin data, ShipmentDBContext _context)
     {
       try
       {
@@ -40,7 +33,7 @@ namespace Shipment_Agent.Services.Auth
       }
     }
 
-    public static async Task<bool> DeleteUser(AuthIncData data, ShipmentDBContext _context)
+    public static async Task<bool> DeleteUser(UserLogin data, ShipmentDBContext _context)
     {
       try
       {
@@ -59,7 +52,7 @@ namespace Shipment_Agent.Services.Auth
       }
     }
 
-    public static async Task<ClientAuth> RegisterClient(AuthIncData data, ShipmentDBContext _context)
+    public static async Task<ClientAuth> RegisterClient(UserLogin data, ShipmentDBContext _context)
     {
       bool CheckUnique = _context.ClientAuths.Where(a => a.NAME == data.Name).Count() > 0;
       if (CheckUnique)

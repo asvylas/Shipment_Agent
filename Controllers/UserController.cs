@@ -10,25 +10,27 @@ using Microsoft.AspNetCore.Mvc;
 using Shipment_Agent.Models;
 using Shipment_Agent.Services;
 using Shipment_Agent.Services.Auth;
+using Shipment_Agent.Classes;
 
 namespace Shipment_Agent.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class AuthController : Controller
+  public class UserController : Controller
   {
     private ShipmentDBContext _shipmentDBContext;
-    public AuthController(ShipmentDBContext shipmentDBContext)
+    public UserController(ShipmentDBContext shipmentDBContext)
     {
       _shipmentDBContext = shipmentDBContext;
     }
     // Register a new user
     [HttpPost]
-    public async Task<JsonResult> Post([FromBody] AuthIncData data)
+    public async Task<JsonResult> Post([FromBody] UserLogin data)
     {
       try
       {
         var Client = await AuthAndReg.RegisterClient(data, _shipmentDBContext);
+        var token = Services.Auth.TokenMaster.GenerateToken(data.Name);
         return Json(Client);
       }
       catch (System.Exception ex)
@@ -39,7 +41,7 @@ namespace Shipment_Agent.Controllers
     }
     //
     [HttpDelete]
-    public async Task<JsonResult> Delete(AuthIncData data, ShipmentDBContext _shipmentDBContext)
+    public async Task<JsonResult> Delete(UserLogin data)
     {
       try
       {
