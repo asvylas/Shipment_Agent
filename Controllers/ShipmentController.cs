@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shipment_Agent.Models;
 using Shipment_Agent.Services.Auth;
 using Shipment_Agent.Services.Shipment;
@@ -26,31 +27,61 @@ namespace Shipment_Agent.Controllers
 
     // GET api/values/5
     [HttpGet("{id}")]
-    public ActionResult<string> Get(int id)
+    public async Task<JsonResult> Get(int id, [FromHeader] string token)
     {
-      return "value";
+      string mystring = "a";
+      string username;
+      List<Models.Shipment> list;
+      bool flag;
+
+      try
+      {
+        username = TokenMaster.ValidateToken(token);
+        flag = _shipmentDBContext.ClientAuths.Where(a => a.NAME == username).Count() > 0;
+        if (!flag)
+        {
+          list = (_shipmentDBContext.Shipments.Where(a => a.ClientID == id)).ToList();
+          return Json(list);
+        }
+        else
+        {
+          throw new System.Exception("Something failed along the way.");
+        }
+      }
+      catch (System.Exception)
+      {
+        throw;
+      }
+
     }
 
     // POST api/values
     [HttpPost]
-    public async Task<JsonResult> PostAsync([FromBody] Shipment data, [FromHeader] string token)
+    public async Task<JsonResult> Post([FromBody] Shipment data, [FromHeader] string token)
     {
       string username;
       Models.ClientAuth client;
       Shipment shipment;
 
-      username = TokenMaster.ValidateToken(token);
-      client = _shipmentDBContext.ClientAuths
-        .Where(a => a.NAME == username)
-        .First();
-      if (client.ID == data.ClientID)
+      try
       {
-        shipment = await ShipmentMaster.CreateShipment(data, _shipmentDBContext);
-        return Json(shipment);
+        username = TokenMaster.ValidateToken(token);
+        client = _shipmentDBContext.ClientAuths
+          .Where(a => a.NAME == username)
+          .First();
+        if (client.ID == data.ClientID)
+        {
+          shipment = await ShipmentMaster.CreateShipment(data, _shipmentDBContext);
+          return Json(shipment.ShipmentID);
+        }
+        else
+        {
+          throw new System.Exception("Wrong client ID.");
+        }
       }
-      else
+      catch (System.Exception)
       {
-        return Json("");
+        throw;
       }
     }
 
@@ -58,6 +89,7 @@ namespace Shipment_Agent.Controllers
     [HttpDelete("{id}")]
     public void Delete(int id)
     {
+
     }
   }
 }

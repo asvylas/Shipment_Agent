@@ -58,6 +58,10 @@ namespace Shipment_Agent.Migrations
 
                     b.Property<int>("ClientReference3");
 
+                    b.Property<string>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NOW()");
+
                     b.Property<string>("DestinationAddress")
                         .IsRequired()
                         .HasMaxLength(40);

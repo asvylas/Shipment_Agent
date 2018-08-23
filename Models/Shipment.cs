@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shipment_Agent.Models
@@ -7,6 +8,8 @@ namespace Shipment_Agent.Models
     [Key]
     [MaxLength(256)]
     public string ShipmentID { get; set; }
+    public string Created {get; set;}
+    public string Status {get;set;}
     [Required]
     public int ClientID { get; set; }
     public int ClientReference1 { get; set; }

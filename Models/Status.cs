@@ -4,7 +4,8 @@ namespace Shipment_Agent.Models
 {
   public class Status
   {
-    public string Name {get;set;}
-    public int Code {get;set;}
+    public string ShipmentID {get;set;}
+    public int StatusCode {get;set;}
+    public string Locations {get;set;}
   }
 }

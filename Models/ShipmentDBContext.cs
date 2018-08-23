@@ -18,6 +18,12 @@ namespace Shipment_Agent.Models
       modelBuilder.Entity<ClientAuth>()
           .HasIndex(b => b.NAME)
           .IsUnique();
+      modelBuilder.Entity<Shipment>()
+          .Property(a => a.Created)
+          .HasDefaultValueSql("NOW()");
+      modelBuilder.Entity<Shipment>()
+          .Property(a => a.Status)
+          .HasDefaultValue("1");
     }
   }
 }

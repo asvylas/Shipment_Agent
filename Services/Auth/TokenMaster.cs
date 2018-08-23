@@ -30,7 +30,8 @@ namespace Shipment_Agent.Services.Auth
           new Claim(ClaimTypes.Name, clientName)
         }),
         Expires = DateTime.Now.AddHours(12),
-        SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256Signature)
+        SigningCredentials = new SigningCredentials(
+          SecurityKey, SecurityAlgorithms.HmacSha256Signature)
       };
       Handler = new JwtSecurityTokenHandler();
       Token = Handler.CreateJwtSecurityToken(Descriptor);
@@ -62,7 +63,8 @@ namespace Shipment_Agent.Services.Auth
           ValidateAudience = false,
           IssuerSigningKey = new SymmetricSecurityKey(key)
         };
-        principal = tokenHandler.ValidateToken(token, parameters, out securityToken);
+        principal = tokenHandler.ValidateToken(
+          token, parameters, out securityToken);
         return principal;
       }
       catch (System.Exception)

@@ -9,8 +9,8 @@ using Shipment_Agent.Models;
 namespace Shipment_Agent.Migrations
 {
     [DbContext(typeof(ShipmentDBContext))]
-    [Migration("20180820123158_maxvalues2")]
-    partial class maxvalues2
+    [Migration("20180823151128_CreatedShipmentssss")]
+    partial class CreatedShipmentssss
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,6 +59,10 @@ namespace Shipment_Agent.Migrations
                     b.Property<int>("ClientReference2");
 
                     b.Property<int>("ClientReference3");
+
+                    b.Property<string>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("DestinationAddress")
                         .IsRequired()
