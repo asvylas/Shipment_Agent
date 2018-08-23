@@ -39,7 +39,7 @@ namespace Shipment_Agent.Controllers
       }
     }
     [HttpPut]
-    public async Task<JsonResult> Put([FromBody] UserToken data)
+    public JsonResult Put([FromBody] UserToken data)
     {
       try
       {

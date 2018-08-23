@@ -4,6 +4,7 @@ namespace Shipment_Agent.Models
 {
   public class Status
   {
-    public string Initial = "";
+    public string Name {get;set;}
+    public int Code {get;set;}
   }
 }

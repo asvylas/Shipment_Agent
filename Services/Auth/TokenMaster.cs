@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Shipment_Agent.Services;
 using Microsoft.IdentityModel.Tokens;
 using Shipment_Agent.Classes;
+using System.Threading.Tasks;
 
 namespace Shipment_Agent.Services.Auth
 {

@@ -16,7 +16,7 @@ namespace Shipment_Agent.Services.Shipment
 
     public static string GenerateShipmentID(int clientID)
     {
-      string shipmentID = null;
+      string shipmentID = "166061" + clientID.ToString();
       return shipmentID;
     }
   }
