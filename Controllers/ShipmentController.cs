@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Shipment_Agent.Classes;
 using Shipment_Agent.Models;
+using Shipment_Agent.Services.Auth;
 
 namespace Shipment_Agent.Controllers
 {
@@ -41,7 +43,8 @@ namespace Shipment_Agent.Controllers
         await _shipmentDBContext.Shipments.AddAsync(data);
         await _shipmentDBContext.SaveChangesAsync();
         var shipment =  _shipmentDBContext.Shipments
-          .Where(a=> a.ShipmentID == data.ShipmentID).First();
+          .Where(a=> a.ShipmentID == data.ShipmentID)
+          .First();
         return Json(shipment);
       }
       catch (System.Exception ex)
@@ -52,9 +55,11 @@ namespace Shipment_Agent.Controllers
     }
 
     // PUT api/values/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpPut]
+    public JsonResult Put([FromBody] UserToken data)
     {
+      var claimedToken = TokenMaster.ValidateToken(data.Token);
+      return Json(claimedToken);
     }
 
     // DELETE api/values/5

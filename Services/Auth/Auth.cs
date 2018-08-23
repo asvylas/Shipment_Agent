@@ -54,8 +54,13 @@ namespace Shipment_Agent.Services.Auth
 
     public static async Task<ClientAuth> RegisterClient(UserLogin data, ShipmentDBContext _context)
     {
-      bool CheckUnique = _context.ClientAuths.Where(a => a.NAME == data.Name).Count() > 0;
-      if (CheckUnique)
+      bool checkUnique;
+      Models.ClientAuth client;
+
+      checkUnique = _context.ClientAuths
+        .Where(a => a.NAME == data.Name)
+        .Count() > 0;
+      if (checkUnique)
       {
         throw new Exception("Client name must be unique.");
       }
@@ -63,18 +68,17 @@ namespace Shipment_Agent.Services.Auth
       {
         try
         {
-          _context.ClientAuths.Find(data.Name);
           (string hash, string salt) = GenerateSaltAndHash(data.Password);
-          var Client = new Models.ClientAuth()
+          client = new Models.ClientAuth()
           {
             ID = GenerateRN(),
             SALT = salt,
             HASH = hash,
             NAME = data.Name
           };
-          _context.ClientAuths.Add(Client);
+          _context.ClientAuths.Add(client);
           await _context.SaveChangesAsync();
-          return (Client);
+          return (client);
         }
         catch (System.Exception ex)
         {
@@ -86,17 +90,20 @@ namespace Shipment_Agent.Services.Auth
     public static (string, string) GenerateSaltAndHash(string Password)
     {
       //var RNG = RandomNumberGenerator.Create();
-      byte[] salt = new byte[128 / 8];
+      byte[] salt;
+      string hash;
+
+      salt = new byte[128 / 8];
       using (var rng = RandomNumberGenerator.Create())
       {
         rng.GetBytes(salt);
       }
-      string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-        password: Password,
-        salt: salt,
-        prf: KeyDerivationPrf.HMACSHA1,
-        iterationCount: 10000,
-        numBytesRequested: 256 / 8));
+      hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+       password: Password,
+       salt: salt,
+       prf: KeyDerivationPrf.HMACSHA1,
+       iterationCount: 10000,
+       numBytesRequested: 256 / 8));
       return (hash, Convert.ToBase64String(salt));
     }
 

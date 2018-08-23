@@ -32,7 +32,7 @@ namespace Shipment_Agent
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
       /* Gain access to JWT secret and set token master's secret, if custom secret is not set in the configurations uses default secret */
-      var secretString = Configuration.GetValue("Secret", "8gcK2WJBNFaH8deTWmRadZLvE67L8c29NfsdCAA8waHdX3kbYWJywU92bNVpZtJjmLAQhX");
+      var secretString = Configuration.GetValue("Secret", "OGdjSzJXSkJORmFIOGRlVFdtUmFkWkx2RTY3TDhjMjlOZnNkQ0FBOHdhSGRYM2tiWVdKeXdVOTJiTlZwWnRKam1MQVFoWA==");
       TokenMaster.SetSecret(secretString);
       /* DB configuration */
       var connectionString = Configuration.GetConnectionString("ShipmentDBContext");

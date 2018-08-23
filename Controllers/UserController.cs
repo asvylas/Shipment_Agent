@@ -29,15 +29,27 @@ namespace Shipment_Agent.Controllers
     {
       try
       {
-        var Client = await AuthAndReg.RegisterClient(data, _shipmentDBContext);
+        var client = await AuthAndReg.RegisterClient(data, _shipmentDBContext);
         var token = Services.Auth.TokenMaster.GenerateToken(data.Name);
-        return Json(Client);
+        return Json(token);
       }
       catch (System.Exception ex)
       {
         return Json(ex);
       }
-
+    }
+    [HttpPut]
+    public async Task<JsonResult> Put([FromBody] UserToken data)
+    {
+      try
+      {
+        var token = TokenMaster.ValidateToken(data.Token);
+        return Json(token);
+      }
+      catch (System.Exception)
+      {
+          throw;
+      }
     }
     //
     [HttpDelete]
@@ -45,8 +57,8 @@ namespace Shipment_Agent.Controllers
     {
       try
       {
-        bool ClientDeleted = await AuthAndReg.DeleteUser(data, _shipmentDBContext);
-        if (ClientDeleted)
+        bool clientDeleted = await AuthAndReg.DeleteUser(data, _shipmentDBContext);
+        if (clientDeleted)
         {
           return Json(String.Format("Client {0} deleted.", data.Name));
         }
