@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shipment_Agent.Classes;
 using Shipment_Agent.Models;
 using Shipment_Agent.Services.Auth;
+using Shipment_Agent.Services.Shipment;
 
 namespace Shipment_Agent.Controllers
 {
@@ -34,32 +35,25 @@ namespace Shipment_Agent.Controllers
 
     // POST api/values
     [HttpPost]
-    public async Task<JsonResult> PostAsync([FromBody] Shipment data)
+    public async Task<JsonResult> PostAsync([FromBody] Shipment data, [FromHeader] string token)
     {
-      try
+      string username;
+      Models.ClientAuth client;
+      Shipment shipment;
+
+      username = TokenMaster.ValidateToken(token);
+      client = _shipmentDBContext.ClientAuths
+        .Where(a => a.NAME == username)
+        .First();
+      if (client.ID == data.ClientID)
       {
-        data.ShipmentID = Shipment.GenerateID(data.ClientID);
-        List<Shipment> list = new List<Shipment>();
-        await _shipmentDBContext.Shipments.AddAsync(data);
-        await _shipmentDBContext.SaveChangesAsync();
-        var shipment =  _shipmentDBContext.Shipments
-          .Where(a=> a.ShipmentID == data.ShipmentID)
-          .First();
+        shipment = await ShipmentMaster.CreateShipment(data, _shipmentDBContext);
         return Json(shipment);
       }
-      catch (System.Exception ex)
+      else
       {
-        return Json(ex);
+        return Json("");
       }
-
-    }
-
-    // PUT api/values/5
-    [HttpPut]
-    public JsonResult Put([FromBody] UserToken data)
-    {
-      var claimedToken = TokenMaster.ValidateToken(data.Token);
-      return Json(claimedToken);
     }
 
     // DELETE api/values/5

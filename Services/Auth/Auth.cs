@@ -9,14 +9,14 @@ using Shipment_Agent.Classes;
 
 namespace Shipment_Agent.Services.Auth
 {
-  public class AuthAndReg
+  public class LoginAndRegistration
   {
     public static async Task<bool> AuthenticateClient(UserLogin data, ShipmentDBContext _context)
     {
       try
       {
         var Client = await _context.ClientAuths.Where(a => a.NAME == data.Name).FirstAsync();
-        var HashValidity = AuthAndReg.CompareHash(data.Password, Client);
+        var HashValidity = LoginAndRegistration.CompareHash(data.Password, Client);
         if (!HashValidity)
         {
           throw new Exception("Invalid password.");
@@ -25,7 +25,6 @@ namespace Shipment_Agent.Services.Auth
         {
           return HashValidity;
         }
-
       }
       catch (System.Exception)
       {

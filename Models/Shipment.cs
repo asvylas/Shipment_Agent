@@ -1,8 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Shipment_Agent.Models
 {
@@ -65,28 +61,5 @@ namespace Shipment_Agent.Models
     public string DestinationReference { get; set; }
     [MaxLength(40)]  
     public string DestinationInstructions { get; set; }
-
-    public static string GenerateID(int ClientID)
-    {
-      try
-      {
-        // var Client = _shipmentDBContext.ClientAuths
-        //   .Where(a => a.ID == ClientID).Single();
-        // using (var context = new )
-        // {
-        //   var blogs = context.Blogs.ToList();
-        // }
-        // var CurrentShipmentID = _shipmentDBContext.Shipments
-        //   .Where(a => a.ClientID == ClientID)
-        //   .OrderByDescending(a => a.ShipmentID)
-        //   .FirstOrDefault();
-        string ShipmentID = "1010001" + ClientID + "aaaaa";
-        return ShipmentID;
-      }
-      catch (System.Exception ex)
-      {
-        throw ex;
-      }
-    }
   }
 }

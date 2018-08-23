@@ -29,7 +29,7 @@ namespace Shipment_Agent.Controllers
     {
       try
       {
-        var client = await AuthAndReg.RegisterClient(data, _shipmentDBContext);
+        var client = await LoginAndRegistration.RegisterClient(data, _shipmentDBContext);
         var token = Services.Auth.TokenMaster.GenerateToken(data.Name);
         return Json(token);
       }
@@ -57,7 +57,7 @@ namespace Shipment_Agent.Controllers
     {
       try
       {
-        bool clientDeleted = await AuthAndReg.DeleteUser(data, _shipmentDBContext);
+        bool clientDeleted = await LoginAndRegistration.DeleteUser(data, _shipmentDBContext);
         if (clientDeleted)
         {
           return Json(String.Format("Client {0} deleted.", data.Name));
