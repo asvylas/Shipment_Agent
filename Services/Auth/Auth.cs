@@ -55,6 +55,7 @@ namespace Shipment_Agent.Services.Auth
     {
       bool checkUnique;
       Models.ClientAuth client;
+      int currentClientID;
 
       checkUnique = _context.ClientAuths
         .Where(a => a.NAME == data.Name)
@@ -67,10 +68,14 @@ namespace Shipment_Agent.Services.Auth
       {
         try
         {
+          currentClientID = (await _context.ClientAuths
+            .OrderByDescending(a=> a.ID)
+            .FirstAsync()).ID;
+          
           (string hash, string salt) = GenerateSaltAndHash(data.Password);
           client = new Models.ClientAuth()
           {
-            ID = GenerateRN(),
+            ID = currentClientID + 1,
             SALT = salt,
             HASH = hash,
             NAME = data.Name
@@ -104,14 +109,6 @@ namespace Shipment_Agent.Services.Auth
        iterationCount: 10000,
        numBytesRequested: 256 / 8));
       return (hash, Convert.ToBase64String(salt));
-    }
-
-    static int GenerateRN()
-    {
-      /* TODO -> Generate specific client IDs.?? */
-      Random rnd = new Random();
-      int ClientID = rnd.Next(100000, 999999);
-      return ClientID;
     }
 
     public static bool CompareHash(string Password, ClientAuth Client)
