@@ -1,14 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Shipment_Agent.Models;
-using Shipment_Agent.Services;
 using Shipment_Agent.Services.Auth;
 using Shipment_Agent.Classes;
 

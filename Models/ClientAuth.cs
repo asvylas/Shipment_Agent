@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shipment_Agent.Models

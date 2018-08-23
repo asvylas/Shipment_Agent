@@ -6,7 +6,6 @@ namespace Shipment_Agent.Models
   {
     [Key]
     [MaxLength(256)]
-    [Required]
     public string ShipmentID { get; set; }
     [Required]
     public int ClientID { get; set; }
